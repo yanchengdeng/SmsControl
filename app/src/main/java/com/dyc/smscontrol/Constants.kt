@@ -9,7 +9,7 @@ package com.dyc.smscontrol
 
  class Constants{
     companion object{
-        const val   IS_DEBUG = true;
+        const val   IS_DEBUG = true
         //接口api
         const val BASE_URL = "https://www.baidu.com/?tn=21002492_30_hao_pg"
         //保存登录状态
@@ -19,6 +19,6 @@ package com.dyc.smscontrol
         //返回正确结果
         const val API_OK = 200
         //短信库
-        val SMS = "content://sms"
+        const val SMS = "content://sms"
     }
 }

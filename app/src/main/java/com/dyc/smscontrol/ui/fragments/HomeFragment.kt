@@ -1,6 +1,7 @@
 package com.dyc.smscontrol.ui.fragments
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -20,6 +21,7 @@ import com.dyc.smscontrol.utils.SystemLog
 import com.tbruyelle.rxpermissions2.RxPermissions
 import deng.yc.baseutils.SmsContentObserver
 import kotlinx.android.synthetic.main.fragment_home.*
+import java.lang.Exception
 
 class HomeFragment : Fragment() {
     private var smsContentObserver: SmsContentObserver? = null
@@ -31,6 +33,7 @@ class HomeFragment : Fragment() {
 
     })
 
+    @SuppressLint("CheckResult")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -40,20 +43,23 @@ class HomeFragment : Fragment() {
             .request(Manifest.permission.READ_SMS)
             .subscribe { granted ->
                 if (granted) {
-                    text_home.text = "服务已开启..."
+                    text_home.text = "短信服务已开启..."
                 } else {
                     text_home.text = "服务未开启，请打开短信权限"
                 }
             }
 
-        activity?.let {
-            smsContentObserver = SmsContentObserver(it,handler = myHandler)
-            smsContentObserver?.let { smsContentObserver ->
-                activity?.contentResolver?.registerContentObserver(Uri.parse(Constants.SMS),true,smsContentObserver)
-                SystemLog.log(msg = "启动信息监听")
+        try {
+            activity?.let {
+                smsContentObserver = SmsContentObserver(it,handler = myHandler)
+                smsContentObserver?.let { smsContentObserver ->
+                    activity?.contentResolver?.registerContentObserver(Uri.parse(Constants.SMS),true,smsContentObserver)
+                    SystemLog.log(msg = "启动信息监听")
+                }
             }
-        }
+        }catch (e:Exception){
 
+        }
     }
 
     override fun onCreateView(
@@ -68,11 +74,16 @@ class HomeFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
 
-        activity?.let {
-            smsContentObserver?.let {sms ->
-                it.contentResolver.unregisterContentObserver(sms)
-                SystemLog.log(msg = "关闭信息监听")
+        try {
+            activity?.let {
+                smsContentObserver?.let {sms ->
+                    it.contentResolver.unregisterContentObserver(sms)
+                    SystemLog.log(msg = "关闭信息监听")
+                }
             }
+        }catch (e:Exception){
+
         }
+
     }
 }

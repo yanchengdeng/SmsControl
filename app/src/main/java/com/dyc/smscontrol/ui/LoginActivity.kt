@@ -5,6 +5,7 @@ import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.bigkoo.svprogresshud.SVProgressHUD
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dyc.smscontrol.Constants
@@ -41,6 +42,7 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            KeyboardUtils.hideSoftInput(this)
             doLoginAction(et_account.editableText.toString(),et_pwd.editableText.toString())
         }
     }
