@@ -59,7 +59,7 @@
         android:id="@+id/tv_login_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"
+        android:background="@android:color/holo_red_light"
         android:gravity="center"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:padding="@dimen/activity_horizontal_margin"

@@ -2,22 +2,23 @@ package com.dyc.smscontrol.ui
 
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
-import com.bigkoo.svprogresshud.SVProgressHUD
-import com.blankj.utilcode.util.ActivityUtils
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.dyc.smscontrol.Constants
 import com.dyc.smscontrol.R
-import com.dyc.smscontrol.entity.User
 import com.dyc.smscontrol.entity.Result
+import com.dyc.smscontrol.entity.User
 import com.dyc.smscontrol.http.RetrofitUtil
+import com.dyc.smscontrol.utils.EncryptionUtils
+import com.dyc.smscontrol.utils.SystemLog
+import com.kaopiz.kprogresshud.KProgressHUD
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_login.*
+import org.apache.commons.codec.net.URLCodec
 
 
 /**
@@ -27,9 +28,13 @@ import kotlinx.android.synthetic.main.activity_login.*
  * desc : 登录页
  */
 class LoginActivity : AppCompatActivity() {
+
+    lateinit var progressBar : KProgressHUD
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        progressBar = KProgressHUD.create(this).setLabel("登录中...")
 
         btn_login.setOnClickListener {
             if (TextUtils.isEmpty(et_account.editableText.toString())){
@@ -48,27 +53,41 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
+     * username=q10000&passwd=rsa公钥加密字符串&time=请求当前时间戳秒级
      * 登录
      */
     private fun doLoginAction(account: String, password: String) {
-        SVProgressHUD(this).showWithStatus("登录中....")
+        progressBar.show()
+
+        val maps = HashMap<String,String>()
+        val timeTemp = System.currentTimeMillis()/1000
+        maps.put("username",account)
+        val rsaStr = EncryptionUtils.encrypt("$timeTemp$password", EncryptionUtils.publicKeyString)
+        SystemLog.log(rsaStr)
+        val base64Str = Base64.encode(rsaStr.toByteArray(), Base64.NO_WRAP)
+//        maps.put("passwd", String(base64Str))
+        maps.put("passwd",password)
+        maps.put("time",timeTemp.toString())
+        SystemLog.log(maps.toString())
         RetrofitUtil.getInstance().userService()
-            .login(account,password)
+            .login(maps)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object :Observer<Result<User>>{
                 override fun onComplete() {
-                    SVProgressHUD(this@LoginActivity).dismissImmediately()
+                    progressBar.dismiss()
                 }
 
                 override fun onSubscribe(d: Disposable) {
                 }
 
                 override fun onNext(result: Result<User>) {
-                    SVProgressHUD(this@LoginActivity).dismissImmediately()
-                    if (result.status== Constants.API_OK){
+                    SystemLog.log(result.toString())
+                    progressBar.dismiss()
+                    if (result.code== Constants.API_OK && !TextUtils.isEmpty(result.data.uid)){
                         SPUtils.getInstance().put(Constants.LOGINED_STATUS,true)
-                        //TODO  后续根据接口保存用户信息
+                        SPUtils.getInstance().put(Constants.LOGINED_NICKNAME,account)
+                        SPUtils.getInstance().put(Constants.LOGINED_TOKEN,result.data.uid)
                         ActivityUtils.startActivity(MainActivity::class.java)
                         finish()
                     }else{
@@ -77,14 +96,9 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 override fun onError(e: Throwable) {
-                    SVProgressHUD(this@LoginActivity).dismissImmediately()
-                    ToastUtils.showShort("登录失败")
-                    //TODO  模拟 后期会删除
-                    SPUtils.getInstance().put(Constants.LOGINED_STATUS,true)
-                    ActivityUtils.startActivity(MainActivity::class.java)
-                    finish()
+                    SystemLog.log("${e.message}")
+                    progressBar.dismiss()
                 }
-
             })
 
 

@@ -45,6 +45,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
+    implementation files('libs\\commons-codec-1.14.jar')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -64,8 +65,14 @@ dependencies {
     /** 工具类  **/
     implementation 'com.blankj:utilcode:1.24.7'
 
-    implementation 'com.bigkoo:svprogresshud:1.0.6'
+//    implementation 'com.bigkoo:svprogresshud:1.0.6'
+
+    implementation 'com.kaopiz:kprogresshud:1.2.0'
 
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+
+    implementation 'com.afollestad.material-dialogs:core:3.3.0'
+
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
 
 }

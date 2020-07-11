@@ -82,7 +82,7 @@ class SmsContentObserver constructor(context:Context,handler:Handler) : ContentO
                 if (msg_id != _id){
                     msg_id = _id
                     val message = mHandler.obtainMessage()
-                    message.obj = Msg(phone = phone,body = smsBody,date = dateString)
+                    message.obj = Msg(phone = phone,smsContent = smsBody,datetime = dateString)
                     mHandler.sendMessage(message)
                 }else{
                     LogUtils.d("dyc","重复数据msg_id = $msg_id")

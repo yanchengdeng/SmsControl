@@ -37,7 +37,6 @@ public class RetrofitUtil {
         httpClientBuilder.addInterceptor(interceptor);
         Retrofit retrofit = new Retrofit.Builder()
                 .client(httpClientBuilder.build())
-
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(Constants.BASE_URL)

@@ -34,6 +34,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
                 android:maxLength="20"
+                android:text="q10000"
                 android:singleLine="true"
                 android:background="@android:color/transparent" />
         </LinearLayout>
@@ -64,6 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
+                android:text="111111"
                 android:maxLength="20"
                 android:singleLine="true"
                 android:background="@android:color/transparent"

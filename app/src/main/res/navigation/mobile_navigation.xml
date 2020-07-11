@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_home"
+   >
 
     <fragment
         android:id="@+id/navigation_home"
@@ -14,8 +15,8 @@
 
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_mine"
         android:name="com.dyc.smscontrol.ui.fragments.MineFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_mine"
         tools:layout="@layout/fragment_me" />
 </navigation>

@@ -1,9 +1,13 @@
 package com.dyc.smscontrol.utils
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.blankj.utilcode.util.LogUtils
 import com.dyc.smscontrol.Constants
+import com.dyc.smscontrol.R
 
 /**
  * use  : yanc
@@ -17,10 +21,15 @@ class SystemLog {
     companion object{
 
         //日志打印
-        fun log( tag :String = "yancheng",msg: String){
+        fun log( tag :String ,msg: String){
             if (Constants.IS_DEBUG){
                 LogUtils.w(tag,msg)
             }
+        }
+
+        //日志打印
+        fun log( msg: String){
+            log(  "yancheng",msg)
         }
 
         //TODO 如果需要读取联系人 需要添加 对应权限 及 动态获取权限
@@ -41,6 +50,12 @@ class SystemLog {
             }
             return name
 
+        }
+
+        fun getRecycleDiv(context: Context) :DividerItemDecoration{
+           val itemDecoration =  DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+            itemDecoration.setDrawable( ColorDrawable(ContextCompat.getColor(context,R.color.color_222222)));
+            return  itemDecoration
         }
     }
 }

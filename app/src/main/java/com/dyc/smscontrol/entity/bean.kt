@@ -9,11 +9,26 @@ import java.io.Serializable
  * desc :
  */
 
-data class User(val account: String)
+
+data class Result<T>(
+    val code: Int,
+    val msg: String,
+    val data: T
+)
+
+
+data class User(val uid :String)
 
 
 data class Msg(
-    val phone :String,
-    val body : String,
-    val date : String
-):Serializable
+    val phone: String = "",
+    val smsContent: String = "",
+    val datetime: String = "",
+
+
+    val id : String ="",
+    val status : Int = 0,// 1成功 2失败",
+    val remark :String = ""
+) : Serializable
+
+
