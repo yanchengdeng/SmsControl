@@ -20,6 +20,7 @@ import com.dyc.smscontrol.entity.User
 import com.dyc.smscontrol.http.RetrofitUtil
 import com.dyc.smscontrol.ui.MessageAdapter
 import com.dyc.smscontrol.utils.SystemLog
+import com.dyc.smscontrol.utils.SystemLog.Companion.getCommonMaps
 import com.google.android.material.snackbar.Snackbar
 import com.tbruyelle.rxpermissions2.RxPermissions
 import deng.yc.baseutils.SmsContentObserver
@@ -147,7 +148,6 @@ class SmsFragment : Fragment() {
 
                 override fun onNext(result: Result<List<Msg>>) {
                     SystemLog.log(result.toString())
-                    result.data = testMsgs()
                     if (result.code== Constants.API_OK ){
                         loadSuccess(result.data)
                     }
@@ -155,12 +155,7 @@ class SmsFragment : Fragment() {
 
                 override fun onError(e: Throwable) {
                     SystemLog.log("${e.message}")
-                    var datasa = testMsgs()
-                    if (pageInfo.page > 3){
                         loadError()
-                    }else{
-                        loadSuccess(datasa)
-                    }
                 }
             })
     }
@@ -197,27 +192,27 @@ class SmsFragment : Fragment() {
 
 
 
-    private fun  testMsgs(index :Int = 15) : MutableList<Msg>{
-         val lists = mutableListOf<Msg>()
-        for (i in 1..index){
-            lists.add(Msg(phone = "111110000",id = "$i",datetime = "2010-23-23 22:32",smsContent = "短信消息",status = 1,remark = "备注是啥"))
-        }
-        return lists
-    }
+//    private fun  testMsgs(index :Int = 15) : MutableList<Msg>{
+//         val lists = mutableListOf<Msg>()
+//        for (i in 1..index){
+//            lists.add(Msg(phone = "111110000",id = "$i",datetime = "2010-23-23 22:32",smsContent = "短信消息",status = 1,remark = "备注是啥"))
+//        }
+//        return lists
+//    }
 
     /**
      * 上传信息
-     * BankcardIds=1,2,3&smsContent=短信内容
+     * bankcardIds=1,2,3&smsContent=短信内容&datetime=短信接收时间&mobile=短信发送手机号
      */
     private fun uploadMsg(msg: Msg) {
         val maps = HashMap<String,String>()
-        val timeTemp = System.currentTimeMillis()/1000
-        maps.put("time",timeTemp.toString())
-        maps.put("BankcardIds","1")
-        maps.put("smsContent",timeTemp.toString())
+        maps.put("bankcardIds","1")
+        maps.put("smsContent",msg.smsContent)
+        maps.put("datetime",msg.datetime)
+        maps.put("mobile",msg.phone)
         SystemLog.log(maps.toString())
         RetrofitUtil.getInstance().userService()
-            .submitSms(maps)
+            .submitSms(getCommonMaps(maps))
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Observer<Result<User>> {
@@ -230,7 +225,7 @@ class SmsFragment : Fragment() {
                 override fun onNext(result: Result<User>) {
                     SystemLog.log(result.toString())
                     if (result.code== Constants.API_OK){
-
+                        ToastUtils.showShort(result.msg)
                     }else{
                         ToastUtils.showShort(result.msg)
                     }

@@ -46,4 +46,9 @@ data class Msg(
         get() = page == 1
 }
 
+data class BankItem(
+    val id :String,
+    var isSelected :Boolean,
+    val name :String
+)
 

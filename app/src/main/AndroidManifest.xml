@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.BankList"></activity>
+        <activity android:name=".ui.BankListActivity"></activity>
         <activity
             android:name=".ui.MainActivity"
             android:screenOrientation="portrait" />

@@ -16,7 +16,7 @@ package com.dyc.smscontrol
         const val LOGINED_STATUS = "login_status"
         //保存登录名称
         const val LOGINED_NICKNAME = "login_nick_name"
-        //保存登录token
+        //UID
         const val LOGINED_TOKEN = "login_token"
         //超时
         const val DEFAULT_TIMEOUT = 10

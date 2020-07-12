@@ -63,14 +63,7 @@ class LoginActivity : AppCompatActivity() {
         maps.put("username",account)
 //        val rsaStr = EncryptionUtils.encrypt("$timeTemp$password", EncryptionUtils.publicKeyString)
         val rsaStr = Rsa().encryptByPublicKey("$timeTemp$password")
-        SystemLog.log("rsa加密：$rsaStr")
-//        val base64Bytes = Base64.encode(rsaStr.toByteArray(), Base64.DEFAULT)
-//        val base64Str = String(base64Bytes)
-//        SystemLog.log("base64加密：$base64Str")
-//        val base64Decoder = Base64.decode(base64Bytes,Base64.DEFAULT)
-//        SystemLog.log("base64解密：${String(base64Decoder)}")
         maps.put("passwd", rsaStr)
-//        maps.put("passwd",password)
         maps.put("time",timeTemp.toString())
         SystemLog.log(maps.toString())
         RetrofitUtil.getInstance().userService()
@@ -104,7 +97,5 @@ class LoginActivity : AppCompatActivity() {
                     progressBar.dismiss()
                 }
             })
-
-
     }
 }

@@ -4,6 +4,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.dyc.smscontrol.R
+import com.dyc.smscontrol.entity.BankItem
 import com.dyc.smscontrol.entity.Msg
 
 /**
@@ -26,6 +27,27 @@ class MessageAdapter(layoutResId: Int, data: MutableList<Msg>?) :
         holder.setText(R.id.tv_content,item.smsContent)
 
 
+    }
+
+}
+
+
+
+/**
+ * 消息列表
+ */
+class BankAdapter(layoutResId: Int, data: MutableList<BankItem>?) :
+    BaseQuickAdapter<BankItem, BaseViewHolder>(layoutResId, data) {
+
+    override fun convert(holder: BaseViewHolder, item: BankItem) {
+
+        holder.setText(R.id.tv_bank_id,"银行卡id：${item.id}")
+        holder.setText(R.id.tv_card_name,item.name)
+        if (item.isSelected){
+            holder.setImageResource(R.id.iv_selected,R.mipmap.checked)
+        }else{
+            holder.setImageResource(R.id.iv_selected,R.mipmap.unchecked)
+        }
     }
 
 }

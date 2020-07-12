@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.SPUtils
 import com.dyc.smscontrol.Constants
 import com.dyc.smscontrol.R
 
@@ -52,10 +53,27 @@ class SystemLog {
 
         }
 
+        /**
+         * recyclerview 分割线
+         */
         fun getRecycleDiv(context: Context) :DividerItemDecoration{
            val itemDecoration =  DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
             itemDecoration.setDrawable( ColorDrawable(ContextCompat.getColor(context,R.color.color_222222)));
             return  itemDecoration
+        }
+
+        /**
+         * 公共参数
+         */
+        fun getCommonMaps (maps :HashMap<String,String>): HashMap<String,String> {
+            val timeTemp = System.currentTimeMillis()/1000
+            val timeUid = "$timeTemp${SPUtils.getInstance().getString(Constants.LOGINED_TOKEN)}"
+            val rsaStr = Rsa().encryptByPublicKey(timeUid)
+            maps.put("time",timeTemp.toString())
+            maps.put("uid",rsaStr)
+            SystemLog.log(maps.toString())
+            return maps
+
         }
     }
 }
