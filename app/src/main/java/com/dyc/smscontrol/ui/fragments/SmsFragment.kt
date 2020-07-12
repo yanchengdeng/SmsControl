@@ -10,10 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.ToastUtils
 import com.dyc.smscontrol.Constants
 import com.dyc.smscontrol.R
 import com.dyc.smscontrol.entity.Msg
+import com.dyc.smscontrol.entity.PageInfo
 import com.dyc.smscontrol.entity.Result
 import com.dyc.smscontrol.entity.User
 import com.dyc.smscontrol.http.RetrofitUtil
@@ -27,12 +28,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
-import java.lang.Exception
 
-class HomeFragment : Fragment() {
+/**
+ * author : yanc
+ * data : 2020/7/12
+ * time : 16:09
+ * desc : 短信监听功能
+ */
+class SmsFragment : Fragment() {
     private var smsContentObserver: SmsContentObserver? = null
-    private var page = 1
-    private var pageSize = 15
+    private val pageInfo = PageInfo()
     private val adadpter = MessageAdapter(R.layout.adapter_msg, mutableListOf())
     private val myHandler : Handler = Handler(Handler.Callback { msg ->
         if (msg.obj is Msg){
@@ -72,7 +77,7 @@ class HomeFragment : Fragment() {
 
 
 
-        getMessages()
+
 
         //短信数据列表
         activity?.let {
@@ -81,19 +86,41 @@ class HomeFragment : Fragment() {
             recycle_view.adapter = adadpter
         }
 
+        // 进入页面，刷新数据
+        refresh.isRefreshing = true
+        getMessages()
+
         //下拉
         refresh.setOnRefreshListener {
             refresh.isRefreshing = true
-            page =1
-            getMessages()
+            pageInfo.reset()
+            refresh()
         }
 
         //上拉加载更多
 
         adadpter.loadMoreModule.setOnLoadMoreListener {
-            page++
-            getMessages()
+            loadMore()
         }
+    }
+
+
+    /**
+     * 刷新
+     */
+    private fun refresh() {
+        // 这里的作用是防止下拉刷新的时候还可以上拉加载
+        adadpter.loadMoreModule.isEnableLoadMore = false
+        // 下拉刷新，需要重置页数
+        pageInfo.reset()
+        getMessages()
+    }
+
+    /**
+     * 加载更多
+     */
+    private fun loadMore() {
+        getMessages()
     }
 
     override fun onCreateView(
@@ -108,7 +135,7 @@ class HomeFragment : Fragment() {
 
     private fun getMessages(){
         RetrofitUtil.getInstance().userService()
-            .smsList(page.toString(),pageSize.toString())
+            .smsList(pageInfo.page.toString(),Constants.PAGE_SIZE.toString())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .subscribe(object : Observer<Result<List<Msg>>> {
@@ -120,34 +147,55 @@ class HomeFragment : Fragment() {
 
                 override fun onNext(result: Result<List<Msg>>) {
                     SystemLog.log(result.toString())
-                    refresh.isRefreshing = false
+                    result.data = testMsgs()
                     if (result.code== Constants.API_OK ){
-
-                    }else{
-                        ToastUtils.showShort(result.msg)
+                        loadSuccess(result.data)
                     }
                 }
 
                 override fun onError(e: Throwable) {
                     SystemLog.log("${e.message}")
-
-                    if (page==1) {
-                        adadpter.setNewInstance(testMsgs())
-                        adadpter.loadMoreModule.loadMoreComplete()
-                    }else {
-                        val datas = if (page>3) testMsgs(5) else testMsgs()
-                        adadpter.data = datas
-                        if (datas.size== pageSize){
-                            adadpter.loadMoreModule.loadMoreComplete()
-                        }else{
-                            adadpter.loadMoreModule.loadMoreComplete()
-                            adadpter.loadMoreModule.loadMoreEnd()
-                        }
+                    var datasa = testMsgs()
+                    if (pageInfo.page > 3){
+                        loadError()
+                    }else{
+                        loadSuccess(datasa)
                     }
-                    refresh.isRefreshing = false
                 }
             })
     }
+
+
+    private fun loadSuccess(data: List<Msg>) {
+        refresh.isRefreshing  =false
+        adadpter.loadMoreModule.isEnableLoadMore = true
+
+        if (pageInfo.isFirstPage) {
+            //如果是加载的第一页数据，用 setData()
+            adadpter.setList(data)
+        } else {
+            //不是第一页，则用add
+            adadpter.addData(data)
+        }
+
+        if (data.size < Constants.PAGE_SIZE) {
+            //如果不够一页,显示没有更多数据布局
+            adadpter.loadMoreModule.loadMoreEnd()
+        } else {
+            adadpter.loadMoreModule.loadMoreComplete()
+        }
+
+        // page加一
+        pageInfo.nextPage()
+    }
+
+    private fun loadError(){
+        refresh.isRefreshing = false
+        adadpter.loadMoreModule.isEnableLoadMore = true
+        adadpter.loadMoreModule.loadMoreFail()
+    }
+
+
 
     private fun  testMsgs(index :Int = 15) : MutableList<Msg>{
          val lists = mutableListOf<Msg>()

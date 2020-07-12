@@ -21,9 +21,9 @@ class MessageAdapter(layoutResId: Int, data: MutableList<Msg>?) :
 
     override fun convert(holder: BaseViewHolder, item: Msg) {
 
-//        holder.setText(R.id.tv_phone,item.phone)
-//        holder.setText(R.id.tv_time,item.datetime)
-//        holder.setText(R.id.tv_content,item.smsContent)
+        holder.setText(R.id.tv_phone,item.phone)
+        holder.setText(R.id.tv_time,item.datetime)
+        holder.setText(R.id.tv_content,item.smsContent)
 
 
     }

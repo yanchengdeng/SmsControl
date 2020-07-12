@@ -13,7 +13,7 @@ import java.io.Serializable
 data class Result<T>(
     val code: Int,
     val msg: String,
-    val data: T
+    var data: T
 )
 
 
@@ -30,5 +30,20 @@ data class Msg(
     val status : Int = 0,// 1成功 2失败",
     val remark :String = ""
 ) : Serializable
+
+
+ class PageInfo {
+    var page = 1
+    fun nextPage() {
+        page++
+    }
+
+    fun reset() {
+        page = 1
+    }
+
+    val isFirstPage: Boolean
+        get() = page == 1
+}
 
 

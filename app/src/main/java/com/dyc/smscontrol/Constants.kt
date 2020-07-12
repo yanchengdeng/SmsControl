@@ -24,5 +24,7 @@ package com.dyc.smscontrol
         const val API_OK = 0
         //短信库
         const val SMS = "content://sms"
+        //煤业数量
+        const val PAGE_SIZE = 15
     }
 }

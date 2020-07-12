@@ -11,7 +11,7 @@ import androidx.navigation.NavGraphNavigator
 import androidx.navigation.NavigatorProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.dyc.smscontrol.R
-import com.dyc.smscontrol.ui.fragments.HomeFragment
+import com.dyc.smscontrol.ui.fragments.SmsFragment
 import com.dyc.smscontrol.ui.fragments.MineFragment
 import com.dyc.smscontrol.ui.nav.FixFragmentNavigator
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -77,8 +77,8 @@ class MainActivity : AppCompatActivity() {
 
         val mainDestination = fragmentNavigator.createDestination()
         mainDestination.id = R.id.navigation_home
-        mainDestination.className = HomeFragment::class.java.canonicalName!!
-        mainDestination.label = getString(R.string.title_home)
+        mainDestination.className = SmsFragment::class.java.canonicalName!!
+        mainDestination.label = getString(R.string.title_sms)
         navGraph.addDestination(mainDestination)
 
         val mineDestination = fragmentNavigator.createDestination()

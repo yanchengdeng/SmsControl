@@ -6,15 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.fragments.HomeFragment">
+    tools:context=".ui.fragments.SmsFragment">
 
     <TextView
         android:id="@+id/text_home"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:textAlignment="center"
         android:background="@color/color_dddddd"
-        android:padding="10dp"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="20sp"
      />
@@ -26,8 +25,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
        >
-
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_view"

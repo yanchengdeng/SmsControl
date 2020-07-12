@@ -8,8 +8,8 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.dyc.smscontrol.ui.fragments.HomeFragment"
-        android:label="@string/title_home"
+        android:name="com.dyc.smscontrol.ui.fragments.SmsFragment"
+        android:label="@string/title_sms"
         tools:layout="@layout/fragment_home" />
 
 
