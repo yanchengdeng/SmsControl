@@ -110,12 +110,15 @@ class BankListActivity : AppCompatActivity() {
                     progressBar.dismiss()
                     if (result.code== Constants.API_OK ){
                         getBanks()
+                        ToastUtils.showShort(result.msg)
+                    }else{
+                        ToastUtils.showShort(result.msg)
                     }
                 }
 
                 override fun onError(e: Throwable) {
                     progressBar.dismiss()
-                    SystemLog.log("${e.message}")
+                    ToastUtils.showShort("${e.message}")
 
                 }
             })
