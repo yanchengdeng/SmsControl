@@ -40,9 +40,6 @@ class MineFragment : Fragment() {
 
         tv_user_name.text = SPUtils.getInstance().getString(Constants.LOGINED_NICKNAME)
 
-        tv_banks_list.setOnClickListener {
-            ActivityUtils.startActivity(BankListActivity::class.java)
-        }
 
         tv_login_out.setOnClickListener {
             activity?.let {

@@ -22,8 +22,9 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:gravity = "center"
+        android:textStyle="bold"
         android:textColor="@android:color/black"
-        android:textSize="@dimen/text_16sp" />
+        android:textSize="@dimen/text_18sp" />
     <TextView
         android:id="@+id/tv_function"
         android:layout_width="wrap_content"

@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.dyc.smscontrol.Constants
 import com.dyc.smscontrol.R
@@ -109,8 +111,10 @@ class BankListActivity : AppCompatActivity() {
                     SystemLog.log(result.toString())
                     progressBar.dismiss()
                     if (result.code== Constants.API_OK ){
-                        getBanks()
                         ToastUtils.showShort(result.msg)
+                        SPUtils.getInstance().put(Constants.CARDS_ID,ids.toString())
+                        ActivityUtils.startActivity(MainActivity::class.java)
+                        finish()
                     }else{
                         ToastUtils.showShort(result.msg)
                     }

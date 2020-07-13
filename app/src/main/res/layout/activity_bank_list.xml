@@ -8,6 +8,7 @@
     tools:context=".ui.BankListActivity">
 
     <include layout="@layout/common_header"/>
+    <include layout="@layout/div_line"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_view"

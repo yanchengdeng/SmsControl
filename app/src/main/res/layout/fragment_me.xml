@@ -32,25 +32,12 @@
             android:layout_toRightOf="@+id/icon"
             android:gravity="left"
             android:textColor="@color/color_222222"
-            android:text="小李子"
             android:textSize="@dimen/text_16sp" />
 
     </RelativeLayout>
 
 
-    <TextView
-        android:id="@+id/tv_banks_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_below="@+id/rl_header"
-        android:background="@color/white"
-        android:drawableRight="@mipmap/arrow"
-        android:gravity="left"
-        android:textColor="@color/color_222222"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:text="银行卡"
-        android:textSize="@dimen/text_16sp" />
+
 
 
 

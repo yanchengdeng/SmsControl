@@ -1,5 +1,6 @@
 package com.dyc.smscontrol.http;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.dyc.smscontrol.Constants;
 
 import java.util.concurrent.TimeUnit;
@@ -39,7 +40,7 @@ public class RetrofitUtil {
                 .client(httpClientBuilder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(Constants.BASE_URL)
+                .baseUrl(SPUtils.getInstance().getString(Constants.SAVE_BASE_URL))
                 .build();
         userService = retrofit.create(UserService.class);
     }

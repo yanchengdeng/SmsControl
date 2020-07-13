@@ -19,19 +19,33 @@
      />
 
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_sms_record"
         android:layout_width="match_parent"
-        android:id="@+id/refresh"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-       >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/corner_shaper_button_blue"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:textColor="@color/white"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="@string/sms_record"
+        android:textSize="@dimen/text_16sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_view"
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_change_cards"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-      />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/corner_shaper_button_blue"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:textColor="@color/white"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="@string/change_cards"
+        android:textSize="@dimen/text_16sp" />
 
 </LinearLayout>

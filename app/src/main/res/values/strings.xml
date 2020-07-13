@@ -7,4 +7,7 @@
     <string name="sure">確定</string>
     <string name="cancel">取消</string>
     <string name="vertify_banks">验证银行卡</string>
+    <string name="please_input_api">请填写服务地址</string>
+    <string name="sms_record">短信记录</string>
+    <string name="change_cards">更改监听卡列表</string>
 </resources>

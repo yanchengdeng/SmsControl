@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
+import android.text.TextUtils
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -49,7 +50,13 @@ class WelcomeActivity : AppCompatActivity() {
     private fun doNext() {
         val isLogin = SPUtils.getInstance().getBoolean(Constants.LOGINED_STATUS,false)
         if (isLogin){
-            ActivityUtils.startActivity(MainActivity::class.java)
+            if (TextUtils.isEmpty(SPUtils.getInstance().getString(Constants.CARDS_ID))){
+                //未验证卡 去卡列表
+                ActivityUtils.startActivity(BankListActivity::class.java)
+            }else{
+                //已验证 去首页
+                ActivityUtils.startActivity(MainActivity::class.java)
+            }
         }else{
             ActivityUtils.startActivity(LoginActivity::class.java)
         }

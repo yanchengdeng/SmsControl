@@ -10,8 +10,7 @@ package com.dyc.smscontrol
  class Constants{
     companion object{
         const val   IS_DEBUG = true
-        //接口api
-        const val BASE_URL = "http://test1.yalalat.com/jttest/"
+        //接口api http://test1.yalalat.com/jttest/  retrofit api 后要以 / 结尾
         //保存登录状态
         const val LOGINED_STATUS = "login_status"
         //保存登录名称
@@ -24,7 +23,11 @@ package com.dyc.smscontrol
         const val API_OK = 0
         //短信库
         const val SMS = "content://sms"
-        //煤业数量
+        //每页数量
         const val PAGE_SIZE = 15
+        //已验证card id
+        const val  CARDS_ID = "cards_id"
+        //api接口地址
+        const val SAVE_BASE_URL = "base_api"
     }
 }

@@ -35,7 +35,18 @@ class LoginActivity : AppCompatActivity() {
 
         progressBar = KProgressHUD.create(this).setLabel("登录中...")
 
+        if (!TextUtils.isEmpty(SPUtils.getInstance().getString(Constants.SAVE_BASE_URL))){
+            et_api.setText(SPUtils.getInstance().getString(Constants.SAVE_BASE_URL).dropLast(1))
+        }
+
         btn_login.setOnClickListener {
+
+
+            if (TextUtils.isEmpty(et_api.editableText.toString())){
+                ToastUtils.showShort(getString(R.string.please_input_api))
+                return@setOnClickListener
+            }
+
             if (TextUtils.isEmpty(et_account.editableText.toString())){
                 ToastUtils.showShort(getString(R.string.please_input_account))
                 return@setOnClickListener
@@ -46,6 +57,9 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            val baseAPI = "${et_api.editableText.toString().trim()}/"
+            //保存api 地址至本地
+            SPUtils.getInstance().put(Constants.SAVE_BASE_URL,baseAPI)
             KeyboardUtils.hideSoftInput(this)
             doLoginAction(et_account.editableText.toString(),et_pwd.editableText.toString())
         }
@@ -85,7 +99,8 @@ class LoginActivity : AppCompatActivity() {
                         SPUtils.getInstance().put(Constants.LOGINED_STATUS,true)
                         SPUtils.getInstance().put(Constants.LOGINED_NICKNAME,account)
                         SPUtils.getInstance().put(Constants.LOGINED_TOKEN,result.data.uid)
-                        ActivityUtils.startActivity(MainActivity::class.java)
+                        SPUtils.getInstance().remove(Constants.CARDS_ID)
+                        ActivityUtils.startActivity(BankListActivity::class.java)
                         finish()
                     }else{
                         ToastUtils.showShort(result.msg)
