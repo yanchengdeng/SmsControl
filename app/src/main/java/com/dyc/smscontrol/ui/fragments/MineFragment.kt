@@ -93,6 +93,7 @@ class MineFragment : Fragment() {
 
                 override fun onError(e: Throwable) {
                     SystemLog.log("${e.message}")
+                    ToastUtils.showShort("${e.message}")
                 }
             })
 
