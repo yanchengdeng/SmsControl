@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
  * time : 0:05
  * desc : 银行卡列表
  */
-class BankListActivity : AppCompatActivity() {
+class BankListActivity : BaseActivity() {
 
     private val adapter = BankAdapter(R.layout.adapter_bank, mutableListOf())
     lateinit var progressBar : KProgressHUD
@@ -116,7 +116,7 @@ class BankListActivity : AppCompatActivity() {
                         ActivityUtils.startActivity(MainActivity::class.java)
                         finish()
                     }else{
-                        ToastUtils.showShort(result.msg)
+                       dealApiCode(result.code,result.msg)
                     }
                 }
 

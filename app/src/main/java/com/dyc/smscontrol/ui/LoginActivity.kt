@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_login.*
  * time : 0:04
  * desc : 登录页
  */
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
 
     lateinit var progressBar : KProgressHUD
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +103,7 @@ class LoginActivity : AppCompatActivity() {
                         ActivityUtils.startActivity(BankListActivity::class.java)
                         finish()
                     }else{
-                        ToastUtils.showShort(result.msg)
+                        dealApiCode(result.code,result.msg)
                     }
                 }
 

@@ -24,6 +24,7 @@ import com.dyc.smscontrol.entity.Result
 import com.dyc.smscontrol.entity.User
 import com.dyc.smscontrol.http.RetrofitUtil
 import com.dyc.smscontrol.ui.BankListActivity
+import com.dyc.smscontrol.ui.LoginActivity
 import com.dyc.smscontrol.ui.MessageAdapter
 import com.dyc.smscontrol.utils.SystemLog
 import com.dyc.smscontrol.utils.SystemLog.Companion.getCommonMaps
@@ -171,8 +172,21 @@ class SmsFragment : Fragment() {
                     if (result.code== Constants.API_OK){
 //                        ToastUtils.showShort(result.msg)
                     }else{
-                        ToastUtils.showShort(result.msg)
-                        playMp3()
+                        if (result.code==Constants.API_TIPS){
+                            ToastUtils.showShort(result.msg)
+                            playMp3()
+                        }else if (result.code == Constants.API_USER_ERROR){
+                            ActivityUtils.finishAllActivitiesExceptNewest()
+                            SPUtils.getInstance().remove(Constants.LOGINED_STATUS)
+                            SPUtils.getInstance().remove(Constants.LOGINED_NICKNAME)
+                            SPUtils.getInstance().remove(Constants.LOGINED_TOKEN)
+                            ActivityUtils.startActivity(LoginActivity::class.java)
+                            activity?.let {
+                                it.finish()
+                            }
+                        }
+
+
                     }
                 }
 

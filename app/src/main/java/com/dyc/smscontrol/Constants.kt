@@ -21,6 +21,10 @@ package com.dyc.smscontrol
         const val DEFAULT_TIMEOUT = 10
         //返回正确结果
         const val API_OK = 0
+        //提示信息错误
+        const val API_TIPS = 1
+        //异常 跳到登录页
+        const val API_USER_ERROR = 100
         //短信库
         const val SMS = "content://sms"
         //每页数量

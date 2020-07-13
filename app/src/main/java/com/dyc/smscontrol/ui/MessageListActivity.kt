@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_message_list.*
 /**
  * 短信列表
  */
-class MessageListActivity : AppCompatActivity() {
+class MessageListActivity : BaseActivity() {
     private val pageInfo = PageInfo()
     private val adadpter = MessageAdapter(R.layout.adapter_msg, mutableListOf())
 
@@ -85,6 +85,8 @@ class MessageListActivity : AppCompatActivity() {
                     SystemLog.log(result.toString())
                     if (result.code== Constants.API_OK ){
                         loadSuccess(result.data)
+                    }else{
+                        dealApiCode(result.code,result.msg)
                     }
                 }
 
