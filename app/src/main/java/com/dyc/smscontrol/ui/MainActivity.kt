@@ -2,6 +2,7 @@ package com.dyc.smscontrol.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -114,6 +115,15 @@ class MainActivity : AppCompatActivity() {
                 firstClickTime = System.currentTimeMillis()
             }
         }
+
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_HOME){
+            moveTaskToBack(false)
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 
 
 }

@@ -65,6 +65,7 @@ class SmsFragment : Fragment() {
     @SuppressLint("CheckResult")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        SystemLog.log("---onActivityCreated")
         val permissions = RxPermissions(this)
         permissions
             .request(Manifest.permission.READ_SMS)
@@ -164,15 +165,18 @@ class SmsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        SystemLog.log("---onCreateView")
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        SystemLog.log("---onCreate")
     }
 
     override fun onAttach(context: Context) {
+        SystemLog.log("---onAttach")
         super.onAttach(context)
     }
 
