@@ -10,6 +10,7 @@ import androidx.navigation.NavGraph
 import androidx.navigation.NavGraphNavigator
 import androidx.navigation.NavigatorProvider
 import androidx.navigation.fragment.NavHostFragment
+import com.blankj.utilcode.util.ActivityUtils
 import com.dyc.smscontrol.R
 import com.dyc.smscontrol.ui.fragments.SmsFragment
 import com.dyc.smscontrol.ui.fragments.MineFragment
@@ -107,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
             if (System.currentTimeMillis() - firstClickTime < 2000) {
-                finish()
+                ActivityUtils.finishAllActivities()
             } else {
                 Toast.makeText(this, "再按一次返回键退出程序", Toast.LENGTH_SHORT).show()
                 firstClickTime = System.currentTimeMillis()

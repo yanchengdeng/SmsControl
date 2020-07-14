@@ -2,8 +2,6 @@ package com.dyc.smscontrol.ui
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Base64
-import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.*
 import com.dyc.smscontrol.Constants
 import com.dyc.smscontrol.R
@@ -58,10 +56,14 @@ class LoginActivity : BaseActivity() {
             }
 
             val baseAPI = "${et_api.editableText.toString().trim()}/"
+
+            //每次登录 重置 baseurl
             //保存api 地址至本地
             SPUtils.getInstance().put(Constants.SAVE_BASE_URL,baseAPI)
+            RetrofitUtil.getInstance().resetRetrofit()
             KeyboardUtils.hideSoftInput(this)
             doLoginAction(et_account.editableText.toString(),et_pwd.editableText.toString())
+
         }
     }
 
@@ -100,7 +102,10 @@ class LoginActivity : BaseActivity() {
                         SPUtils.getInstance().put(Constants.LOGINED_NICKNAME,account)
                         SPUtils.getInstance().put(Constants.LOGINED_TOKEN,result.data.uid)
                         SPUtils.getInstance().remove(Constants.CARDS_ID)
-                        ActivityUtils.startActivity(BankListActivity::class.java)
+                        SPUtils.getInstance().remove(Constants.CARDS_NAME)
+                        var bundle = Bundle()
+                        bundle.putBoolean(Constants.IS_FROM_LOGIN,true)
+                        ActivityUtils.startActivity(bundle,BankListActivity::class.java)
                         finish()
                     }else{
                         dealApiCode(result.code,result.msg)
@@ -109,6 +114,7 @@ class LoginActivity : BaseActivity() {
 
                 override fun onError(e: Throwable) {
                     SystemLog.log("${e.message}")
+                    ToastUtils.showShort("请检查输入地址")
                     progressBar.dismiss()
                 }
             })

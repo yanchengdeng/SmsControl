@@ -45,7 +45,17 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:textColor="@color/white"
         android:padding="@dimen/activity_horizontal_margin"
-        android:text="@string/change_cards"
+        android:text="@string/close_listener_change_bank"
         android:textSize="@dimen/text_16sp" />
+
+
+    <TextView
+        android:id="@+id/tv_banks_name"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:textColor="@color/color_222222"
+        android:textSize="@dimen/sp_16"
+        android:text="@string/no_listener_cards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></TextView>
 
 </LinearLayout>

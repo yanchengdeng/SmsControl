@@ -34,16 +34,20 @@ import kotlinx.android.synthetic.main.fragment_home.*
  */
 class BankListActivity : BaseActivity() {
 
+
     private val adapter = BankAdapter(R.layout.adapter_bank, mutableListOf())
     lateinit var progressBar : KProgressHUD
+    private var isFromLogin : Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bank_list)
 
+         isFromLogin = intent.extras?.getBoolean(Constants.IS_FROM_LOGIN,false) ?: false
+
 
         //   返回键
         iv_back.setOnClickListener {
-            finish()
+            checkBackToMain(isFromLogin)
         }
 
         //提交银行卡验证
@@ -61,7 +65,7 @@ class BankListActivity : BaseActivity() {
 //
 //        }
 
-        tv_title.text = getString(R.string.vertify_banks)
+        tv_title.text = getString(R.string.choose_banks)
 //        tv_function.visibility = View.VISIBLE
 
         progressBar = KProgressHUD.create(this).setLabel("加载中...")
@@ -79,6 +83,15 @@ class BankListActivity : BaseActivity() {
         getBanks()
     }
 
+    private fun checkBackToMain(isFromLogin: Boolean) {
+        takeIf { isFromLogin }.let {
+            SPUtils.getInstance().put(Constants.CARDS_ID, "")
+            SPUtils.getInstance().put(Constants.CARDS_NAME, "")
+            ActivityUtils.startActivity(MainActivity::class.java)
+        }
+        finish()
+    }
+
     /**
      * 验证银行卡
      * bankcardIds=1,2,3
@@ -87,7 +100,9 @@ class BankListActivity : BaseActivity() {
         progressBar.setLabel("验证中...").show()
         val maps =  HashMap<String,String>()
         var ids  = java.lang.StringBuilder()
+        val cardsName = java.lang.StringBuilder()
         filter.forEachIndexed { index, bankItem ->
+            cardsName.append(bankItem.name).append("\n")
             if (index < filter.size-1){
                 ids.append(bankItem.id).append(",")
             }else{
@@ -113,6 +128,7 @@ class BankListActivity : BaseActivity() {
                     if (result.code== Constants.API_OK ){
                         ToastUtils.showShort(result.msg)
                         SPUtils.getInstance().put(Constants.CARDS_ID,ids.toString())
+                        SPUtils.getInstance().put(Constants.CARDS_NAME,cardsName.toString())
                         ActivityUtils.startActivity(MainActivity::class.java)
                         finish()
                     }else{
@@ -157,5 +173,10 @@ class BankListActivity : BaseActivity() {
 
                 }
             })
+    }
+
+    override fun onBackPressed() {
+        checkBackToMain(isFromLogin)
+        finish()
     }
 }

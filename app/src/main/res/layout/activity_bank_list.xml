@@ -26,7 +26,7 @@
         android:gravity="center"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:padding="@dimen/activity_horizontal_margin"
-        android:text="验证银行卡"
+        android:text="@string/open_listener"
         android:textColor="@color/white"
         android:textSize="@dimen/text_16sp" />
 

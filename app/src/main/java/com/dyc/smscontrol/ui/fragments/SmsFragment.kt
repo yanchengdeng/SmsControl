@@ -2,11 +2,13 @@ package com.dyc.smscontrol.ui.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.AssetManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,9 +50,12 @@ class SmsFragment : Fragment() {
     private var smsContentObserver: SmsContentObserver? = null
 
     private val myHandler : Handler = Handler(Handler.Callback { msg ->
-        if (msg.obj is Msg){
-            Snackbar.make(ll_root,(msg.obj as Msg).smsContent,Snackbar.LENGTH_SHORT).show()
-            uploadMsg(msg.obj as Msg)
+        if (msg.obj is Msg ){
+            SystemLog.log(msg.data.toString())
+            if (SPUtils.getInstance().getString(Constants.CARDS_ID).isNotEmpty()) {
+                Snackbar.make(ll_root, (msg.obj as Msg).smsContent, Snackbar.LENGTH_SHORT).show()
+                uploadMsg(msg.obj as Msg)
+            }
         }
         false
     })
@@ -65,36 +70,60 @@ class SmsFragment : Fragment() {
             .request(Manifest.permission.READ_SMS)
             .subscribe { granted ->
                 if (granted) {
-                    text_home.text = "短信服务已开启..."
+                    //未选择卡
+                    // 1.提示服务未开启  2. 监听按钮处 改为：请选择监听银行卡
+                    if (TextUtils.isEmpty(SPUtils.getInstance().getString(Constants.CARDS_ID))){
+                        initNoListener()
+                    }else{
+                        //未选择卡
+                        // 1.提示服务已开启...  2. 监听按钮处 改为：关闭监听更改银行卡  3显示银行卡信息
+                        text_home.text = getString(R.string.opening_sms_listener)
+                        btn_change_cards.text = getString(R.string.close_listener_change_bank)
+                        tv_banks_name.text = SPUtils.getInstance().getString(Constants.CARDS_NAME)
+                    }
                     addSmsObserver()
                 } else {
-                    text_home.text = "服务未开启，请打开短信权限"
+                    text_home.text = getString(R.string.no_sms_permission)
                 }
             }
 
 
         btn_sms_record.setOnClickListener {
-            ToastUtils.showShort("暂未开放")
+            ToastUtils.showShort(getString(R.string.waiting_open))
         }
 
         btn_change_cards.setOnClickListener {
             //更改监听卡信息需要先关闭短信服务
             activity?.let {
-                MaterialDialog(it).show {
-                    title(text = "温馨提示")
-                    message(text = "更改监听卡信息需要先关闭短信服务")
-                    positiveButton(R.string.sure) { dialog ->
-                        cancelSmsObserver()
-                        ActivityUtils.startActivity(BankListActivity::class.java)
-                        dismiss()
-                        it.finish()
-                    }
-                    negativeButton(R.string.cancel) { dialog ->
-                        dismiss()
-                    }
+//                MaterialDialog(it).show {
+//                    title(text = "温馨提示")
+//                    message(text = "更改监听卡信息需要先关闭短信服务")
+//                    positiveButton(R.string.sure) { dialog ->
+//                        cancelSmsObserver()
+//                        ActivityUtils.startActivity(BankListActivity::class.java)
+//                        dismiss()
+//                        it.finish()
+//                    }
+//                    negativeButton(R.string.cancel) { dialog ->
+//                        dismiss()
+//                    }
+//                }
+                cancelSmsObserver()
+                if (SPUtils.getInstance().getString(Constants.CARDS_ID).isNotEmpty()) {
+                    SPUtils.getInstance().remove(Constants.CARDS_ID)
+                    SPUtils.getInstance().remove(Constants.CARDS_NAME)
+                    initNoListener()
                 }
+                ActivityUtils.startActivity(BankListActivity::class.java)
             }
         }
+    }
+
+    //初始化 无监听状态显示
+    private fun initNoListener() {
+        text_home.text = getString(R.string.not_open_sms_listener)
+        btn_change_cards.text = getString(R.string.choose_banks_for_listening)
+        tv_banks_name.text = SPUtils.getInstance().getString(Constants.CARDS_NAME)
     }
 
 
@@ -109,7 +138,7 @@ class SmsFragment : Fragment() {
                 }
             }
         }catch (e:Exception){
-
+            SystemLog.log(msg = "启动信息监听失败-------------------")
         }
     }
 
@@ -124,7 +153,7 @@ class SmsFragment : Fragment() {
                 }
             }
         }catch (e:Exception){
-
+            SystemLog.log(msg = "关闭信息监听失败-------------------")
         }
     }
 
@@ -139,6 +168,13 @@ class SmsFragment : Fragment() {
     }
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+    }
 
 
 
@@ -223,4 +259,5 @@ class SmsFragment : Fragment() {
             }
         }
     }
+
 }

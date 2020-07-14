@@ -31,7 +31,11 @@ package com.dyc.smscontrol
         const val PAGE_SIZE = 15
         //已验证card id
         const val  CARDS_ID = "cards_id"
+        //已验证card name
+        const val  CARDS_NAME = "cards_name"
         //api接口地址
         const val SAVE_BASE_URL = "base_api"
+        // 来自登录页 转场
+        const val IS_FROM_LOGIN = "is_from_login"
     }
 }

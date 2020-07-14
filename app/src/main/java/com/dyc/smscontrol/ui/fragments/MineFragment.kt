@@ -80,11 +80,28 @@ class MineFragment : Fragment() {
                         SPUtils.getInstance().remove(Constants.LOGINED_STATUS)
                         SPUtils.getInstance().remove(Constants.LOGINED_NICKNAME)
                         SPUtils.getInstance().remove(Constants.LOGINED_TOKEN)
+                        SPUtils.getInstance().remove(Constants.CARDS_NAME)
+                        SPUtils.getInstance().remove(Constants.CARDS_ID)
                         ActivityUtils.startActivity(LoginActivity::class.java)
                         dialog.dismiss()
                         activity?.finish()
                     }else{
-                        ToastUtils.showShort(result.msg)
+                        when (result.code) {
+                            Constants.API_TIPS -> {
+                                ToastUtils.showShort(result.msg)
+                            }
+                            Constants.API_USER_ERROR -> {
+                                ActivityUtils.finishAllActivitiesExceptNewest()
+                                SPUtils.getInstance().remove(Constants.LOGINED_STATUS)
+                                SPUtils.getInstance().remove(Constants.LOGINED_NICKNAME)
+                                SPUtils.getInstance().remove(Constants.LOGINED_TOKEN)
+                                ActivityUtils.startActivity(LoginActivity::class.java)
+                                activity?.finish()
+                            }
+                            else -> {
+                                SystemLog.log("其他异常")
+                            }
+                        }
                     }
                 }
 
