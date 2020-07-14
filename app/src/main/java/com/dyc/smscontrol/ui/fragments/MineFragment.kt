@@ -100,6 +100,7 @@ class MineFragment : Fragment() {
                             }
                             else -> {
                                 SystemLog.log("其他异常")
+                                ToastUtils.showShort("${result.msg}")
                             }
                         }
                     }

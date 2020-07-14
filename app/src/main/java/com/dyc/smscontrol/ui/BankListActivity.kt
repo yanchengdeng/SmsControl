@@ -164,6 +164,8 @@ class BankListActivity : BaseActivity() {
                     progressBar.dismiss()
                     if (result.code== Constants.API_OK ){
                         adapter.setList(result.data)
+                    }else{
+                        dealApiCode(result.code,result.msg)
                     }
                 }
 
