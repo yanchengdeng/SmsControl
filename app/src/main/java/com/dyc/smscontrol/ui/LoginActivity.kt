@@ -103,6 +103,7 @@ class LoginActivity : BaseActivity() {
                         SPUtils.getInstance().put(Constants.LOGINED_TOKEN,result.data.uid)
                         SPUtils.getInstance().remove(Constants.CARDS_ID)
                         SPUtils.getInstance().remove(Constants.CARDS_NAME)
+                        SystemLog.clearSearchHistroy(Constants.SAVE_SMS_UPLOAD_MSG)
                         var bundle = Bundle()
                         bundle.putBoolean(Constants.IS_FROM_LOGIN,true)
                         ActivityUtils.startActivity(bundle,BankListActivity::class.java)

@@ -27,8 +27,9 @@ data class Msg(
 
 
     val id : String ="",
-    val status : Int = 0,// 1成功 2失败",
-    val remark :String = ""
+    var status : Int = 0,// 1成功 2失败",
+    var remark :String = "",
+    var isShowUploadInfo :Boolean = false //是否显示要上传的日志信息
 ) : Serializable
 
 

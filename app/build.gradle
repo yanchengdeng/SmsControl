@@ -3,6 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('xyzx_0503.jks')
+            storePassword 'Ddzx2016...xyzx'
+            keyPassword 'Ddzx2016...xyzx'
+            keyAlias 'xyzx'
+        }
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 

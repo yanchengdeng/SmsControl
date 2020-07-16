@@ -26,6 +26,7 @@ import com.dyc.smscontrol.entity.Result
 import com.dyc.smscontrol.entity.User
 import com.dyc.smscontrol.http.RetrofitUtil
 import com.dyc.smscontrol.ui.BankListActivity
+import com.dyc.smscontrol.ui.LasterMessageUploaderListActivity
 import com.dyc.smscontrol.ui.LoginActivity
 import com.dyc.smscontrol.ui.MessageAdapter
 import com.dyc.smscontrol.utils.SystemLog
@@ -49,8 +50,8 @@ import java.io.IOException
 class SmsFragment : Fragment() {
     private var smsContentObserver: SmsContentObserver? = null
 
-    private val myHandler : Handler = Handler(Handler.Callback { msg ->
-        if (msg.obj is Msg ){
+    private val myHandler: Handler = Handler(Handler.Callback { msg ->
+        if (msg.obj is Msg) {
             SystemLog.log(msg.data.toString())
             if (SPUtils.getInstance().getString(Constants.CARDS_ID).isNotEmpty()) {
                 Snackbar.make(ll_root, (msg.obj as Msg).smsContent, Snackbar.LENGTH_SHORT).show()
@@ -59,7 +60,6 @@ class SmsFragment : Fragment() {
         }
         false
     })
-
 
 
     @SuppressLint("CheckResult")
@@ -73,9 +73,9 @@ class SmsFragment : Fragment() {
                 if (granted) {
                     //未选择卡
                     // 1.提示服务未开启  2. 监听按钮处 改为：请选择监听银行卡
-                    if (TextUtils.isEmpty(SPUtils.getInstance().getString(Constants.CARDS_ID))){
+                    if (TextUtils.isEmpty(SPUtils.getInstance().getString(Constants.CARDS_ID))) {
                         initNoListener()
-                    }else{
+                    } else {
                         //未选择卡
                         // 1.提示服务已开启...  2. 监听按钮处 改为：关闭监听更改银行卡  3显示银行卡信息
                         text_home.text = getString(R.string.opening_sms_listener)
@@ -90,7 +90,7 @@ class SmsFragment : Fragment() {
 
 
         btn_sms_record.setOnClickListener {
-            ToastUtils.showShort(getString(R.string.waiting_open))
+            ActivityUtils.startActivity(LasterMessageUploaderListActivity::class.java)
         }
 
         btn_change_cards.setOnClickListener {
@@ -129,35 +129,38 @@ class SmsFragment : Fragment() {
 
 
     //添加sms监听
-    private fun addSmsObserver(){
+    private fun addSmsObserver() {
         try {
             activity?.let {
-                smsContentObserver = SmsContentObserver(it,handler = myHandler)
+                smsContentObserver = SmsContentObserver(it, handler = myHandler)
                 smsContentObserver?.let { smsContentObserver ->
-                    activity?.contentResolver?.registerContentObserver(Uri.parse(Constants.SMS),true,smsContentObserver)
+                    activity?.contentResolver?.registerContentObserver(
+                        Uri.parse(Constants.SMS),
+                        true,
+                        smsContentObserver
+                    )
                     SystemLog.log(msg = "启动信息监听")
                 }
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             SystemLog.log(msg = "启动信息监听失败-------------------")
         }
     }
 
 
     //取消sms监听
-    private fun  cancelSmsObserver(){
+    private fun cancelSmsObserver() {
         try {
             activity?.let {
-                smsContentObserver?.let {sms ->
+                smsContentObserver?.let { sms ->
                     it.contentResolver.unregisterContentObserver(sms)
                     SystemLog.log(msg = "关闭信息监听")
                 }
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             SystemLog.log(msg = "关闭信息监听失败-------------------")
         }
     }
-
 
 
     override fun onCreateView(
@@ -181,20 +184,16 @@ class SmsFragment : Fragment() {
     }
 
 
-
-
-
-
     /**
      * 上传信息
      * bankcardIds=1,2,3&smsContent=短信内容&datetime=短信接收时间&mobile=短信发送手机号
      */
     private fun uploadMsg(msg: Msg) {
-        val maps = HashMap<String,String>()
-        maps.put("bankcardIds",SPUtils.getInstance().getString(Constants.CARDS_ID))
-        maps.put("smsContent",msg.smsContent)
-        maps.put("datetime",msg.datetime)
-        maps.put("mobile",msg.phone)
+        val maps = HashMap<String, String>()
+        maps.put("bankcardIds", SPUtils.getInstance().getString(Constants.CARDS_ID))
+        maps.put("smsContent", msg.smsContent)
+        maps.put("datetime", msg.datetime)
+        maps.put("mobile", msg.phone)
         SystemLog.log(maps.toString())
         RetrofitUtil.getInstance().userService()
             .submitSms(getCommonMaps(maps))
@@ -209,17 +208,29 @@ class SmsFragment : Fragment() {
 
                 override fun onNext(result: Result<User>) {
                     SystemLog.log(result.toString())
-                    if (result.code== Constants.API_OK){
+                    if (result.code == Constants.API_OK) {
 //                        ToastUtils.showShort(result.msg)
-                    }else{
-                        if (result.code==Constants.API_TIPS){
+                        msg.remark = "上传成功：${result.msg}"
+                        msg.status = 1
+                        msg.isShowUploadInfo = true
+                        saveLesterUploadInfo(msg)
+                    } else {
+                        if (result.code == Constants.API_TIPS) {
                             ToastUtils.showShort(result.msg)
+                            msg.remark = "上传失败：${result.msg}"
+                            msg.isShowUploadInfo = true
+                            msg.status = 2
+                            saveLesterUploadInfo(msg)
                             playMp3()
-                        }else if (result.code == Constants.API_USER_ERROR){
+                        } else if (result.code == Constants.API_USER_ERROR) {
                             ActivityUtils.finishAllActivitiesExceptNewest()
                             SPUtils.getInstance().remove(Constants.LOGINED_STATUS)
                             SPUtils.getInstance().remove(Constants.LOGINED_NICKNAME)
                             SPUtils.getInstance().remove(Constants.LOGINED_TOKEN)
+                            msg.remark = "上传失败：${result.msg}"
+                            msg.status = 2
+                            msg.isShowUploadInfo = true
+                            saveLesterUploadInfo(msg)
                             ActivityUtils.startActivity(LoginActivity::class.java)
                             activity?.let {
                                 it.finish()
@@ -232,8 +243,22 @@ class SmsFragment : Fragment() {
 
                 override fun onError(e: Throwable) {
                     SystemLog.log("${e.message}")
+                    msg.remark = "上传失败：${e.message}"
+                    msg.status = 2
+                    msg.isShowUploadInfo = true
+                    saveLesterUploadInfo(msg)
+                    playMp3()
                 }
             })
+
+    }
+
+
+    /**
+     * 保存最近10条短信
+     */
+    private fun saveLesterUploadInfo(msg: Msg) {
+        SystemLog.saveSearchHistory(Constants.SAVE_SMS_UPLOAD_MSG, msg)
 
     }
 
@@ -244,7 +269,7 @@ class SmsFragment : Fragment() {
     }
 
 
-    private fun playMp3(){
+    private fun playMp3() {
         activity?.let {
             var player = MediaPlayer()
             val assetManager: AssetManager = it.assets

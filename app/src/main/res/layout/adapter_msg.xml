@@ -34,4 +34,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+
+    <TextView
+        android:id="@+id/tv_upload_result"
+        android:text="上传结果："
+        android:lineSpacingMultiplier="1.3"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tv_content"
+        android:textColor="@color/red"
+        android:visibility="gone"
+        android:textSize="@dimen/sp_16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+
 </RelativeLayout>

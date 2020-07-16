@@ -11,4 +11,5 @@
     <color name="color_cccccc">#cccccc</color>
     <color name="color_dddddd">#dddddd</color>
     <color name="color_4d4d4d">#4d4d4d</color>
+    <color name="red">#ff0000</color>
 </resources>

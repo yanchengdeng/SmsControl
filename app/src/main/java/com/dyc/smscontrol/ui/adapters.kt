@@ -1,5 +1,7 @@
 package com.dyc.smscontrol.ui
 
+import android.view.View
+import androidx.annotation.ColorRes
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -26,7 +28,15 @@ class MessageAdapter(layoutResId: Int, data: MutableList<Msg>?) :
         holder.setText(R.id.tv_time,item.datetime)
         holder.setText(R.id.tv_content,item.smsContent)
 
-
+        if (item.isShowUploadInfo){
+            holder.setText(R.id.tv_upload_result,"${item.remark}")
+            holder.setVisible(R.id.tv_upload_result, true)
+            if (item.status==1){
+                holder.setTextColor(R.id.tv_upload_result,context.resources.getColor(R.color.colorPrimary))
+            }else{
+                holder.setTextColor(R.id.tv_upload_result,context.resources.getColor(R.color.red))
+            }
+        }
     }
 
 }

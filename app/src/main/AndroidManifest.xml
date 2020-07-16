@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/msg"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.BaseActivity"></activity>
+        <activity android:name=".ui.LasterMessageUploaderListActivity"></activity>
+        <activity android:name=".ui.BaseActivity" />
         <activity android:name=".ui.MessageListActivity" />
         <activity android:name=".ui.BankListActivity" />
         <activity

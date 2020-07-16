@@ -10,7 +10,7 @@
     <string name="choose_banks">选择银行卡</string>
     <string name="choose_banks_for_listening">选择银行卡监听</string>
     <string name="please_input_api">请填写服务地址</string>
-    <string name="sms_record">短信记录</string>
+    <string name="sms_record">短信日志信息</string>
     <string name="open_listener">开启监听</string>
     <string name="close_listener_change_bank">关闭监听更改银行卡</string>
     <string name="no_listener_cards">暂无可监听的银行卡</string>
